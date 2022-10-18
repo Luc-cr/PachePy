@@ -1,5 +1,6 @@
 import socket
 import os
+import sys
 
 def parseHttp(text : str) -> dict:
     http = {}
@@ -11,7 +12,7 @@ def parseHttp(text : str) -> dict:
         http['version'] = request[2]
         data.__delitem__(0)
         for i in data:
-            if len(i.split(": ")) == 2: 
+            if len(i.split(": ")) == 2:
                 http[i.split(": ")[0]] = i.split(": ")[1] 
         return http
     return None
@@ -35,7 +36,7 @@ class server:
             clientCon, clientAddr = self.server.accept()
             request = clientCon.recv(65535).decode()
             request = parseHttp(request)
-            
+
             if request != None:
                 if "." not in request['route']:
                     if os.path.isfile(self.dir + request['route'] +"/"+ self.doc) != True:
@@ -45,15 +46,17 @@ class server:
                         clientCon.sendall(b"HTTP/1.1 200 OK\n\n"+bytes(file.read(),'utf-8'))
                 elif os.path.isfile(self.dir + request['route']) != True:
                     clientCon.sendall(b"HTTP/1.1 404 NOT FOUND\n\n<h1>No se encontro el recurso</h1>")
-                else:        
-                    file = open(self.dir + request['route'], "r")   
+                else:
+                    file = open(self.dir + request['route'], "r")
                     clientCon.sendall(b"HTTP/1.1 200 OK\n\n"+bytes(file.read(),'utf-8'))
                     file.close()
-            clientCon.close() 
+            clientCon.close()
+            if self.status == False:
+                break
 
     def getConfig(self) -> dict:
         dic = {}
         dic['host'] = self.host
         dic['port'] = self.port
         dic['dir'] = self.dir
-        return dic 
+        return dic

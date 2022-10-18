@@ -12,10 +12,10 @@ servers = {}
 runing = {}
 
 if file['start']['autorun']:
-  servers['autorun'] = server(file['start']['host'], file['start']['port'], file['start']['dir'], file['file']['autoread'])
-  pro = threading.Thread(target=servers['autorun'].start)
-  pro.start()
+  servers['autorun'] = server(file['start']['host'], file['start']['port'], file['start']['dir'], file['start']['read'])
+  pro = threading.Thread(target=servers['autorun'].start, args=())
   runing['autorun'] = pro
+  pro.start()
 
 
 # Create commands
@@ -31,7 +31,7 @@ def help(args):
 @cmd.addCommand("exit", "(Exit the comand prompt)", "")
 def exit(args):
   for i in runing.values():
-    pass
+    i.status = False
   return sys.exit(0)
 
 @cmd.addCommand("services", "(Display all servers runing)", "")
@@ -52,9 +52,9 @@ def start(args):
 def run(args):
   if args[0] not in servers.keys():
     return "Server not found, check the servers"
-  pro = threading.Thread(target=servers[args[0]].start)
-  pro.start()
+  pro = threading.Thread(target=servers[args[0]].start, args=())
   runing[args[0]] = pro
+  pro.start()
   return "Running " + args[0]
 
 @cmd.addCommand("status", "(Get the status of a server)", "'name'")
@@ -69,10 +69,10 @@ def status(args):
 def stop(args):
   if args[0] not in servers.keys():
     return "Server not found, check the servers"
-  runing[args[0]]._stop
+  servers[args[0]].status = False
   runing.__delitem__(args[0])
-  return ""
-  
+  return "Server stoped"
+
 @cmd.addCommand("save", "(Save server config)", "'name'")
 def save(args):
   if args[0] not in servers.keys():

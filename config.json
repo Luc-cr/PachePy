@@ -3,11 +3,8 @@
         "host" : "localhost",
         "port" : 2000,
         "autorun" : true,
-        "dir" : "www"
-    },
-    "file": {
-        "autoread" : "pacce.html",
-        "dir" : "www"
+        "dir" : "www",
+        "read" : "index.html"
     },
     "save":{
         "example":{

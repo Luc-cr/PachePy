@@ -1,11 +1,11 @@
 from network import server
 from cmd import *
-import sys 
+import sys
 
 version = "0.0.1"
 print(f"PyPache\nVersion: {version} \nAuthor: Luc")
 
-while True: 
+while True:
   try:
     prompt = input("PyPache >> ").split(" ")
     if prompt[0] not in list(cmd.events.keys()):
