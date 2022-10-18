@@ -11,7 +11,10 @@ while True:
     if prompt[0] not in list(cmd.events.keys()):
       print("[Console] Command not found!!")
     else:
-      print(f"[Console] {cmd.events[prompt[0]][0](prompt[1:])}")
+      if len(prompt) <= 1:
+        print(f"[Console] {cmd.events[prompt[0]][0]()}")
+      else:
+        print(f"[Console] {cmd.events[prompt[0]][0](*prompt[1:])}")
   except KeyboardInterrupt:
     print("\n[Console] Bye!")
     sys.exit(0)

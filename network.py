@@ -26,11 +26,11 @@ class server:
         self.status = False
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Iniciamos comunicacion TCP ip
-        server.bind((host, port)) 
-        server.listen(1) 
+        server.bind((host, port))
         self.server = server
 
     def start(self):
+        self.server.listen(1)
         self.status = True
         while True:
             clientCon, clientAddr = self.server.accept()
@@ -52,6 +52,7 @@ class server:
                     file.close()
             clientCon.close()
             if self.status == False:
+                self.server.close()
                 break
 
     def getConfig(self) -> dict:

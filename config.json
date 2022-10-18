@@ -2,7 +2,7 @@
     "start":{
         "host" : "localhost",
         "port" : 2000,
-        "autorun" : true,
+        "autorun" : false,
         "dir" : "www",
         "read" : "index.html"
     },
@@ -12,5 +12,11 @@
             "host" : "localhost",
             "dir" : "myAdmin"
         }
+    },
+    "default":{
+        "host" : "localhost",
+        "port" : 2000,
+        "dir" : "www",
+        "read" : "index.html"
     }
 }

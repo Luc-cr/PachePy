@@ -21,61 +21,82 @@ if file['start']['autorun']:
 # Create commands
 cmd = commands()
 
-@cmd.addCommand("help", "(Display all commands)", "")
-def help(args):
+@cmd.addCommand()
+def help():
+  """(Display all commands)"""
   commands = "Commands available: \n"
   for i in cmd.events.values():
     commands = commands + i[1]
   return commands 
 
-@cmd.addCommand("exit", "(Exit the comand prompt)", "")
-def exit(args):
+@cmd.addCommand()
+def exit():
+  """(Exit the comand prompt)"""
   for i in runing.values():
     i.status = False
   return sys.exit(0)
 
-@cmd.addCommand("services", "(Display all servers runing)", "")
-def services(args):
+@cmd.addCommand()
+def services():
+  """(Display all servers runing)"""
   s = ""
   for i in runing.keys():
     s += "\n" + i  
   return f"Servers runing: {s}"
 
-@cmd.addCommand("init", "(init the server)", "'name' 'host' 'port' 'dir' 'doc'")
-def start(args):
-  if len(args) < 2:
-    servers[args[0]] = server(args[1], int(args[2]), args[3], args[4])  
-  servers[args[0]] = server(args[1], int(args[2]))
+@cmd.addCommand()
+def init(name = "default", host = file['default']["host"], port = file['default']["port"], directory = file['default']["dir"], doc = file['default']["read"]):
+  """(init the server)"""
+
+  servers[name] = server(host, int(port), directory, doc)
   return "Server initialized"
 
-@cmd.addCommand("run", "(Run the server)", "'name'")
-def run(args):
-  if args[0] not in servers.keys():
+@cmd.addCommand()
+def run(name):
+  """(Run the server)"""
+  if name not in servers.keys():
     return "Server not found, check the servers"
-  pro = threading.Thread(target=servers[args[0]].start, args=())
-  runing[args[0]] = pro
+  pro = threading.Thread(target=servers[name].start, args=())
+  runing[name] = pro
   pro.start()
-  return "Running " + args[0]
+  return "Running " + name
 
-@cmd.addCommand("status", "(Get the status of a server)", "'name'")
-def status(args):
-  if args[0] not in servers.keys():
+@cmd.addCommand()
+def status(name):
+  """(Get the status of a server)"""
+  if name not in servers.keys():
     return "Server not found, check the servers"
-  serv = servers[args[0]]
+  serv = servers[name]
   data = f"Status: \n Running: {serv.status}\n Host: {serv.host} \n Port: {serv.port}"
   return data
 
-@cmd.addCommand("stop", "(Stop server)", "'name'")
-def stop(args):
-  if args[0] not in servers.keys():
+@cmd.addCommand()
+def stop(name):
+  """(Stop server)"""
+  if name not in servers.keys():
     return "Server not found, check the servers"
-  servers[args[0]].status = False
-  runing.__delitem__(args[0])
+  servers[name].status = False
+  runing.__delitem__(name)
+  servers.__delitem__(name)
   return "Server stoped"
 
-@cmd.addCommand("save", "(Save server config)", "'name'")
-def save(args):
-  if args[0] not in servers.keys():
+@cmd.addCommand()
+def save(name):
+  """(Save server config)"""
+  if name not in servers.keys():
     return "Server not found, check the servers"
-  serv = servers[args[0]]
+  serv = servers[name]
   return serv.getConfig()
+
+@cmd.addCommand()
+def reload(name):
+  """(Reload server)"""
+  if name not in servers.keys():
+    return "Server not found, check the servers"
+  servers[name].status = False
+  runing.__delitem__(name)
+  servers.__delitem__(name)
+  pro = threading.Thread(target=servers[name].start, args=())
+  runing[name] = pro
+  pro.start()
+  return "Server reloaded"
