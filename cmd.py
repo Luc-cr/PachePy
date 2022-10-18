@@ -81,21 +81,12 @@ def stop(name):
   return "Server stoped"
 
 @cmd.addCommand()
-def save(name):
-  """(Save server config)"""
-  if name not in servers.keys():
-    return "Server not found, check the servers"
-  serv = servers[name]
-  return serv.getConfig()
-
-@cmd.addCommand()
 def reload(name):
   """(Reload server)"""
   if name not in servers.keys():
     return "Server not found, check the servers"
   servers[name].status = False
   runing.__delitem__(name)
-  servers.__delitem__(name)
   pro = threading.Thread(target=servers[name].start, args=())
   runing[name] = pro
   pro.start()
