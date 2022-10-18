@@ -1,17 +1,10 @@
 {
     "start":{
+        "autorun" : true,
         "host" : "localhost",
         "port" : 2000,
-        "autorun" : false,
         "dir" : "www",
         "read" : "index.html"
-    },
-    "save":{
-        "example":{
-            "port" : 2000,
-            "host" : "localhost",
-            "dir" : "myAdmin"
-        }
     },
     "default":{
         "host" : "localhost",
